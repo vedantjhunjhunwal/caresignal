@@ -1,0 +1,5 @@
+prediction,n,readmit_30_rate,number_inpatient,number_emergency,time_in_hospital,num_medications,number_diagnoses,lift
+2,1081,0.1156,0.83,0.91,4.1,17.03,8.49,1.32
+1,4762,0.0932,0.27,0.06,5.71,21.59,8.61,1.06
+0,3448,0.0783,0.17,0.06,2.4,11.0,7.33,0.89
+3,1530,0.0719,0.21,0.11,2.38,12.35,7.64,0.82

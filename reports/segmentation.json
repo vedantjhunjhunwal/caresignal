@@ -1,0 +1,23 @@
+{
+  "silhouette_by_k": {
+    "3": 0.2422,
+    "4": 0.2568,
+    "5": 0.2053,
+    "6": 0.2365,
+    "7": 0.2355
+  },
+  "chosen_k": 4,
+  "test_readmit_rate": 0.0877,
+  "highest_risk_segment": {
+    "n": 1081.0,
+    "readmit_30_rate": 0.1156,
+    "lift": 1.32,
+    "number_inpatient": 0.83
+  },
+  "lowest_risk_segment": {
+    "n": 1530.0,
+    "readmit_30_rate": 0.0719,
+    "lift": 0.82,
+    "number_inpatient": 0.21
+  }
+}

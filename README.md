@@ -28,6 +28,13 @@ Readmission from administrative data is hard: published models on this dataset r
 
 Promotion gate (validation only), its first-run block and the subgroup audit are in **[MODEL_CARD.md](MODEL_CARD.md)**.
 
+### Patient segments (Spark MLlib K-means)
+
+K-means on 9 log-scaled, standardised utilisation features; k chosen by silhouette on a held-out 20% of
+training (k=4, silhouette 0.257). On the test split the high-emergency-use segment (1,081 encounters,
+0.91 ER visits/yr) is readmitted at 11.6% vs 7.2% for the lowest segment (`reports/segments_test.csv`).
+Segments describe patients for outreach planning; they are not a model input.
+
 ### Clinical NLP: RCT abstract sentence labels (5 classes, 5,000 test sentences)
 
 | model | train sentences | macro-F1 | accuracy | Background | Objective | Methods | Results | Conclusions |
@@ -54,6 +61,7 @@ data/raw/diabetic_data.csv
 - `src/caresignal/pipeline.py`: PySpark bronze/silver/gold, data-quality rules, de-identification
 - `src/caresignal/train.py`: Spark MLlib baseline, LightGBM/XGBoost, calibration, gate, MLflow registry
 - `src/caresignal/metrics.py`, `monitor.py`: calibration, bootstrap CIs, subgroup audit, PSI drift
+- `src/caresignal/segment.py`: Spark MLlib K-means patient segmentation
 - `src/caresignal/serve.py`: FastAPI service loading `models:/caresignal-readmission@champion`
 - `src/caresignal/nlp/`: RoBERTa weight conversion, fine-tuning, TF-IDF baselines
 - `databricks.yml`, `databricks/notebooks/`: the same entry points packaged as a Databricks Asset Bundle job
@@ -68,6 +76,7 @@ pip install -e ".[dev]"
 export MLFLOW_TRACKING_URI=sqlite:///mlflow.db CARESIGNAL_SALT=<secret>
 python -m caresignal.pipeline                 # bronze/silver/gold → lakehouse/
 python -m caresignal.train                    # models, gate, registry, reports/
+python -m caresignal.segment                  # K-means patient segments
 python -m caresignal.nlp.baseline
 python -m caresignal.nlp.finetune --model models/roberta-base --train-n 8000 --epochs 2
 uvicorn caresignal.serve:app                  # POST /score
