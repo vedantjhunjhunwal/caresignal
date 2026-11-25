@@ -28,6 +28,18 @@ Readmission from administrative data is hard: published models on this dataset r
 
 Promotion gate (validation only), its first-run block and the subgroup audit are in **[MODEL_CARD.md](MODEL_CARD.md)**.
 
+### GPU fine-tuning and LLM serving (Colab, Tesla T4)
+
+From `notebooks/colab_gpu_finetune_vllm.ipynb` (`reports/gpu_colab_results.json`):
+
+| run | train sentences | test macro-F1 | accuracy |
+|---|---|---|---|
+| RoBERTa-base, T4 GPU, fp16 | 8,000 | 0.794 | 0.851 |
+| RoBERTa-base, T4 GPU, fp16 | 50,000 | **0.817** | 0.871 |
+
+LLM serving, Qwen2.5-1.5B-Instruct, 200 abstract-summary prompts, 96 new tokens, same T4:
+**vLLM 351 tokens/s vs 126 for Hugging Face `generate` (batch 16), 2.8× throughput.**
+
 ### Excel monitoring dashboard
 
 `reports/caresignal_dashboard.xlsx` (built by `scripts/build_dashboard.py` from the registered champion model):

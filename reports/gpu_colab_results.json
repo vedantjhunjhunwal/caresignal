@@ -1,0 +1,43 @@
+{
+  "source": "notebooks/colab_gpu_finetune_vllm.ipynb, run on Google Colab, 2026-11-25",
+  "gpu": "Tesla T4 (15 GB), fp16 autocast",
+  "roberta_finetune": {
+    "base_model": "FacebookAI/roberta-base",
+    "test_sentences": 5000,
+    "train_8k": {
+      "n_train": 8000,
+      "epochs": 2,
+      "best_dev_macro_f1": 0.7787,
+      "test_macro_f1": 0.7943,
+      "test_accuracy": 0.8514
+    },
+    "train_50k": {
+      "n_train": 50000,
+      "epochs": 2,
+      "batch_size": 64,
+      "best_dev_macro_f1": 0.8127,
+      "test_macro_f1": 0.817,
+      "test_accuracy": 0.8708,
+      "training_seconds_last_step": 340
+    }
+  },
+  "llm_serving": {
+    "model": "Qwen/Qwen2.5-1.5B-Instruct",
+    "n_prompts": 200,
+    "max_new_tokens": 96,
+    "task": "one-sentence objective of PubMed RCT abstracts",
+    "hf_generate": {
+      "batch_size": 16,
+      "wall_s": 72.74,
+      "gen_tokens": 9130,
+      "tokens_per_s": 125.5,
+      "p50_batch_latency_s": 5.14
+    },
+    "vllm": {
+      "wall_s": 26.98,
+      "gen_tokens": 9479,
+      "tokens_per_s": 351.4
+    },
+    "throughput_speedup": 2.8
+  }
+}
