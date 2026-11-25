@@ -10,6 +10,7 @@ care-management targeting), not a model input. Logged to MLflow.
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 
 import mlflow
@@ -37,7 +38,7 @@ def main(lake: Path = Path("lakehouse"), reports: Path = Path("reports")) -> dic
     sc = StandardScaler(inputCol="raw", outputCol="features", withMean=True, withStd=True)
     ev = ClusteringEvaluator(featuresCol="features", metricName="silhouette")
 
-    mlflow.set_experiment("caresignal-segmentation")
+    mlflow.set_experiment(os.environ.get("CARESIGNAL_EXPERIMENT_DIR", "") + "caresignal-segmentation")
     scores, models = {}, {}
     for k in range(3, 8):
         with mlflow.start_run(run_name=f"kmeans-k{k}"):

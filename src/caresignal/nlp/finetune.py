@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import random
 import time
 from pathlib import Path
@@ -23,7 +24,7 @@ from transformers import AutoModelForSequenceClassification, AutoTokenizer, get_
 
 from caresignal.nlp.data import LABELS, load_split, sample
 
-REG_NAME = "caresignal-rct-sentence-roberta"
+REG_NAME = os.environ.get("CARESIGNAL_NLP_MODEL_NAME", "caresignal-rct-sentence-roberta")
 
 
 def batches(texts, labels, tok, bs, max_len, shuffle, seed):
@@ -72,6 +73,7 @@ def main() -> None:
     ap.add_argument("--max-len", type=int, default=64)
     ap.add_argument("--seed", type=int, default=13)
     ap.add_argument("--out", default="models/rct-roberta")
+    ap.add_argument("--report", default="reports/nlp_roberta.json")
     a = ap.parse_args()
 
     random.seed(a.seed)
@@ -95,7 +97,7 @@ def main() -> None:
     sched = get_linear_schedule_with_warmup(opt, int(0.06 * steps), steps)
     scaler = torch.amp.GradScaler("cuda", enabled=amp)
 
-    mlflow.set_experiment("caresignal-clinical-nlp")
+    mlflow.set_experiment(os.environ.get("CARESIGNAL_EXPERIMENT_DIR", "") + "caresignal-clinical-nlp")
     with mlflow.start_run(run_name="roberta-base-finetune") as run:
         mlflow.log_params({**vars(a), "device": device, "fp16": amp, "base_model": "roberta-base (spaCy en_core_web_trf 3.8.0)",
                            "n_train": len(tr_x), "n_dev": len(dv_x), "n_test": len(te_x)})
@@ -132,10 +134,12 @@ def main() -> None:
         mlflow.log_metrics({"test_macro_f1": rep["macro avg"]["f1-score"], "test_accuracy": rep["accuracy"],
                             "train_minutes": (time.time() - t0) / 60})
         res = {"model": "roberta-base fine-tuned", "best_dev_macro_f1": best, "test": rep, "confusion": cm,
-               "labels": LABELS, "minutes": round((time.time() - t0) / 60, 1), "device": device}
-        Path("reports").mkdir(exist_ok=True)
-        Path("reports/nlp_roberta.json").write_text(json.dumps(res, indent=2))
-        mlflow.log_artifact("reports/nlp_roberta.json")
+               "labels": LABELS, "minutes": round((time.time() - t0) / 60, 1), "device": device,
+               "gpu": torch.cuda.get_device_name(0) if device == "cuda" else None, "fp16": amp,
+               "n_train": len(tr_x), "epochs": a.epochs, "batch_size": a.bs}
+        Path(a.report).parent.mkdir(parents=True, exist_ok=True)
+        Path(a.report).write_text(json.dumps(res, indent=2))
+        mlflow.log_artifact(a.report)
         register(model, tok)
         print(json.dumps({"run_id": run.info.run_id, "test_macro_f1": rep["macro avg"]["f1-score"],
                           "test_acc": rep["accuracy"], "best_dev": best}, indent=1))

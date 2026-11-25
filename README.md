@@ -86,6 +86,11 @@ pytest -q
 
 `finetune.py` uses CUDA with fp16 autocast when a GPU is present; the reported run used CPU (2 cores).
 
+- **GPU + LLM serving:** `notebooks/colab_gpu_finetune_vllm.ipynb` reruns fine-tuning on a Colab T4 and
+  benchmarks vLLM against Hugging Face `generate` (`scripts/vllm_bench.py`).
+- **Databricks:** `docs/DATABRICKS.md` runs the pipeline, training, Unity Catalog registry and segments on
+  Databricks Free Edition (serverless).
+
 ## Notes on choices
 
 - **Patient-disjoint, time-ordered split.** All of a patient's encounters sit in one split, assigned by

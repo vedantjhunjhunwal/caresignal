@@ -15,6 +15,7 @@ Race is never a model input; it is kept only to audit the model.
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 
 import lightgbm as lgb
@@ -33,7 +34,10 @@ from caresignal.monitor import drift_report
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
 
-REG_NAME = "caresignal-readmission"
+# On Databricks: CARESIGNAL_MODEL_NAME=workspace.default.caresignal_readmission (Unity Catalog)
+# and CARESIGNAL_EXPERIMENT_DIR=/Users/<you>/ (experiments live at workspace paths).
+REG_NAME = os.environ.get("CARESIGNAL_MODEL_NAME", "caresignal-readmission")
+EXP_DIR = os.environ.get("CARESIGNAL_EXPERIMENT_DIR", "")
 NUMERIC = ["age_years", "is_male", "time_in_hospital", "num_lab_procedures", "num_procedures", "num_medications",
            "number_outpatient", "number_emergency", "number_inpatient", "prior_visits", "prior_encounters_in_data",
            "number_diagnoses", "n_drugs_changed", "n_drugs_on", "payer_missing"]
@@ -112,7 +116,7 @@ def plot_calibration(y, p_raw, p_cal, path):
 
 def main(lake: Path = Path("lakehouse"), reports: Path = Path("reports")) -> dict:
     reports.mkdir(exist_ok=True)
-    mlflow.set_experiment("caresignal-readmission")
+    mlflow.set_experiment(EXP_DIR + "caresignal-readmission")
     df, levels = load_gold(lake)
     prep = ReadmissionModel(None, None, levels).prep
     tr, va, te = (df[df.split == s].reset_index(drop=True) for s in ("train", "valid", "test"))
