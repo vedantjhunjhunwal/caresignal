@@ -28,6 +28,12 @@ Readmission from administrative data is hard: published models on this dataset r
 
 Promotion gate (validation only), its first-run block and the subgroup audit are in **[MODEL_CARD.md](MODEL_CARD.md)**.
 
+### Excel monitoring dashboard
+
+`reports/caresignal_dashboard.xlsx` (built by `scripts/build_dashboard.py` from the registered champion model):
+KPI summary, an outreach-capacity what-if (edit the yellow cell), calibration by risk decile, fairness by group,
+PSI drift and K-means segments. 109 Excel formulas on raw counts, 5 native charts.
+
 ### Patient segments (Spark MLlib K-means)
 
 K-means on 9 log-scaled, standardised utilisation features; k chosen by silhouette on a held-out 20% of
