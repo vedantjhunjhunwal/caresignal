@@ -1,0 +1,17 @@
+__pycache__/
+*.egg-info/
+.venv/
+data/raw/
+lakehouse/
+models/
+mlruns/
+mlartifacts/
+mlflow.db
+spark-warehouse/
+metastore_db/
+derby.log
+dist/
+build/
+.pytest_cache/
+.ruff_cache/
+reports/*.log

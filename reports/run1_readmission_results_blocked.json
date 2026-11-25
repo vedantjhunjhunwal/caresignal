@@ -1,0 +1,77 @@
+{
+  "rows": {
+    "train": 75943,
+    "valid": 12576,
+    "test": 10821
+  },
+  "baseline_spark_lr": {
+    "valid_auroc": 0.6427115736908413,
+    "test_auroc": 0.6300987198842768
+  },
+  "valid_auroc": {
+    "lightgbm": 0.6662173033208946,
+    "xgboost": 0.6655846439312657,
+    "spark_lr": 0.6427115736908413
+  },
+  "gate": {
+    "auroc_gain_vs_baseline": 0.023505729630053263,
+    "valid_ece_calibrated": 0.0026208781318778148,
+    "race_auroc_gap": 0.08268182743010899,
+    "passed": false,
+    "rules": {
+      "min_auroc_gain_vs_baseline": 0.01,
+      "max_ece": 0.02,
+      "max_race_auroc_gap": 0.06
+    }
+  },
+  "test": {
+    "auroc": 0.6456346717435225,
+    "auprc": 0.15048009732735063,
+    "prevalence": 0.08769984289806856,
+    "brier": 0.07809473442093245,
+    "ece": 0.010987649722956721,
+    "top10": {
+      "recall": 0.21707060063224448,
+      "precision": 0.19038817005545286,
+      "lift": 2.1709066261012175
+    },
+    "top20": {
+      "recall": 0.35511064278187565,
+      "precision": 0.15573012939001848,
+      "lift": 1.7757173130973554
+    },
+    "auroc_95ci": [
+      0.6267897593087802,
+      0.6631605753411894
+    ],
+    "raw_ece": 0.013781452997938766,
+    "xgboost_auroc": 0.6462583022647742,
+    "flag_threshold_from_valid": 0.14315789473684212
+  },
+  "drift": {
+    "score_psi": 0.10025653836074142,
+    "features_watch_or_worse": [
+      "payer_missing",
+      "specialty",
+      "prior_encounters_in_data",
+      "discharge_disposition_desc",
+      "admission_type_desc",
+      "number_diagnoses",
+      "admission_source_desc",
+      "number_inpatient"
+    ],
+    "max_feature_psi": 0.4577311991594084
+  },
+  "top_shap": {
+    "discharge_disposition_desc": 0.2232,
+    "number_inpatient": 0.1742,
+    "diag_1_grp": 0.1041,
+    "prior_visits": 0.0937,
+    "number_diagnoses": 0.0764,
+    "specialty": 0.0747,
+    "age_years": 0.0587,
+    "payer_missing": 0.058
+  },
+  "run_id": "64f4d5ebd30e4aac960d7c761271d44b",
+  "model_uri": "models:/m-af77ab83cf2440b783773e480a591933"
+}

@@ -1,0 +1,26 @@
+{
+  "tfidf_lr_8k": {
+    "n_train": 8000,
+    "macro_f1": 0.6877429539663227,
+    "accuracy": 0.7642,
+    "per_class_f1": {
+      "BACKGROUND": 0.5462633451957295,
+      "OBJECTIVE": 0.5349182763744428,
+      "METHODS": 0.8508923431203224,
+      "RESULTS": 0.8386300524529466,
+      "CONCLUSIONS": 0.668010752688172
+    }
+  },
+  "tfidf_lr_full": {
+    "n_train": 180040,
+    "macro_f1": 0.7589231454757722,
+    "accuracy": 0.8246,
+    "per_class_f1": {
+      "BACKGROUND": 0.6415739948674081,
+      "OBJECTIVE": 0.6040268456375839,
+      "METHODS": 0.9062870699881376,
+      "RESULTS": 0.8917396745932415,
+      "CONCLUSIONS": 0.7509881422924901
+    }
+  }
+}

@@ -1,0 +1,49 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "caresignal"
+version = "1.0.0"
+description = "30-day readmission risk (PySpark + MLflow) and clinical-text transformer fine-tuning on public healthcare data"
+requires-python = ">=3.10"
+dependencies = [
+  "pyspark>=3.5",
+  "pandas>=2.1",
+  "pyarrow>=14",
+  "numpy>=1.26",
+  "scikit-learn>=1.4",
+  "lightgbm>=4.3",
+  "xgboost>=2.0",
+  "mlflow>=2.14",
+  "matplotlib>=3.8",
+  "torch>=2.2",
+  "transformers>=4.44",
+  "tokenizers>=0.19",
+  "safetensors>=0.4",
+  "msgpack>=1.0",
+  "fastapi>=0.110",
+  "uvicorn>=0.29",
+]
+
+[project.scripts]
+caresignal-pipeline = "caresignal.pipeline:main"
+caresignal-train = "caresignal.train:cli"
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "httpx>=0.27", "ruff>=0.5"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src", "tests"]
+
+[tool.ruff]
+line-length = 130
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B"]
+ignore = ["E402", "B008"]

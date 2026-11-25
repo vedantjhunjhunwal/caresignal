@@ -1,0 +1,28 @@
+{
+  "bronze_rows": 101766,
+  "quarantined_rows": 3,
+  "quarantine_by_rule": {
+    "gender_known": 3
+  },
+  "excluded_death_or_hospice": 2423,
+  "silver_rows": 99340,
+  "gold_rows": 99340,
+  "splits": {
+    "test": {
+      "rows": 10821,
+      "patients": 9385,
+      "readmit_30_rate": 0.0877
+    },
+    "train": {
+      "rows": 75943,
+      "patients": 51354,
+      "readmit_30_rate": 0.12
+    },
+    "valid": {
+      "rows": 12576,
+      "patients": 9248,
+      "readmit_30_rate": 0.0993
+    }
+  },
+  "patients_in_more_than_one_split": 0
+}

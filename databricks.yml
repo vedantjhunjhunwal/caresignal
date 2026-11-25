@@ -1,0 +1,58 @@
+# Databricks Asset Bundle: the same package and entry points, run as a Databricks job.
+# Not deployed from this repo (no workspace attached); validate with
+#   databricks bundle validate -t dev
+# On Databricks the pipeline reuses the cluster's SparkSession and MLflow tracking server,
+# and the lake path points at a Unity Catalog volume instead of the local folder.
+bundle:
+  name: caresignal
+
+variables:
+  lake_path:
+    default: /Volumes/main/caresignal/lake
+  raw_path:
+    default: /Volumes/main/caresignal/raw
+
+artifacts:
+  caresignal_wheel:
+    type: whl
+    build: python -m build --wheel
+    path: .
+
+resources:
+  jobs:
+    caresignal_readmission:
+      name: caresignal-readmission-${bundle.target}
+      job_clusters:
+        - job_cluster_key: ml
+          new_cluster:
+            spark_version: 15.4.x-cpu-ml-scala2.12
+            node_type_id: Standard_DS3_v2
+            num_workers: 2
+      tasks:
+        - task_key: bronze_silver_gold
+          job_cluster_key: ml
+          python_wheel_task:
+            package_name: caresignal
+            entry_point: caresignal-pipeline
+            parameters: ["--raw", "${var.raw_path}", "--lake", "${var.lake_path}"]
+          libraries:
+            - whl: ./dist/*.whl
+        - task_key: train_register
+          depends_on:
+            - task_key: bronze_silver_gold
+          job_cluster_key: ml
+          python_wheel_task:
+            package_name: caresignal
+            entry_point: caresignal-train
+            parameters: ["--lake", "${var.lake_path}"]
+          libraries:
+            - whl: ./dist/*.whl
+      schedule:
+        quartz_cron_expression: "0 0 3 ? * MON"
+        timezone_id: Asia/Kolkata
+        pause_status: PAUSED
+
+targets:
+  dev:
+    mode: development
+    default: true
